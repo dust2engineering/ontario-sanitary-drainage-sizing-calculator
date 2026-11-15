@@ -1,0 +1,179 @@
+{
+  "code": "Ontario Building Code (2024), Division B, Part 7",
+  "fixture_units_table_7.4.9.3": {
+    "wc_flush_tank": {
+      "label": "Water closet, flush tank",
+      "fu": 4
+    },
+    "wc_flush_valve": {
+      "label": "Water closet, direct flush valve",
+      "fu": 6
+    },
+    "urinal": {
+      "label": "Urinal (pedestal, siphon jet or blowout)",
+      "fu": 4
+    },
+    "lavatory": {
+      "label": "Lavatory (wash basin)",
+      "fu": 1
+    },
+    "bathtub": {
+      "label": "Bathtub (with or without shower)",
+      "fu": 1.5
+    },
+    "shower": {
+      "label": "Shower, per head",
+      "fu": 1.5
+    },
+    "sink": {
+      "label": "Sink (domestic / kitchen)",
+      "fu": 1.5
+    },
+    "laundry": {
+      "label": "Laundry tray / sink",
+      "fu": 1.5
+    },
+    "bathroom_group": {
+      "label": "Bathroom group (WC + lavatory + tub or shower)",
+      "fu": 6
+    }
+  },
+  "stack_table_7.4.10.6A_max_fu_total_and_per_storey": {
+    "1.25": [
+      2,
+      2
+    ],
+    "1.5": [
+      8,
+      2
+    ],
+    "2": [
+      24,
+      6
+    ],
+    "3": [
+      102,
+      18
+    ],
+    "4": [
+      540,
+      100
+    ],
+    "5": [
+      1400,
+      250
+    ],
+    "6": [
+      2900,
+      500
+    ],
+    "8": [
+      7600,
+      830
+    ],
+    "10": [
+      15000,
+      2700
+    ],
+    "12": [
+      26000,
+      4680
+    ],
+    "15": [
+      50000,
+      9000
+    ]
+  },
+  "branch_table_7.4.10.6B_max_fu": {
+    "1.25": 2,
+    "1.5": 3,
+    "2": 6,
+    "3": 27,
+    "4": 180,
+    "5": 390,
+    "6": 700,
+    "8": 1600,
+    "10": 2500,
+    "12": 3900
+  },
+  "building_drain_table_7.4.10.6C_max_fu_by_slope": {
+    "slopes": [
+      "1:400",
+      "1:200",
+      "1:133",
+      "1:100",
+      "1:50",
+      "1:25"
+    ],
+    "rows": {
+      "3": [
+        null,
+        null,
+        null,
+        null,
+        27,
+        36
+      ],
+      "4": [
+        null,
+        null,
+        null,
+        180,
+        240,
+        300
+      ],
+      "5": [
+        null,
+        null,
+        380,
+        390,
+        480,
+        670
+      ],
+      "6": [
+        null,
+        null,
+        600,
+        700,
+        840,
+        1300
+      ],
+      "8": [
+        null,
+        1400,
+        1500,
+        1600,
+        2250,
+        3370
+      ],
+      "10": [
+        null,
+        2500,
+        2700,
+        3000,
+        4500,
+        6500
+      ],
+      "12": [
+        2240,
+        3900,
+        4500,
+        5400,
+        8300,
+        13000
+      ],
+      "15": [
+        4800,
+        7000,
+        9300,
+        10400,
+        16300,
+        22500
+      ]
+    }
+  },
+  "rules": [
+    "Building drains and building sewers connected to a public sewer: minimum NPS 4 (Article 7.4.9.4).",
+    "Vertical sanitary pipe is designed at no more than 29% of full capacity; horizontal at no more than 65% (built into the tables)."
+  ]
+}
