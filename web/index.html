@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontario Sanitary Drainage Sizing Calculator | Dust 2 Engineering Inc.</title>
+<style>
+:root{color-scheme:dark}
+body{background:#0e1116;color:#e6e9ee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:24px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:1.55rem;line-height:1.25;margin:.2em 0 .1em}
+h2{font-size:1.15rem;margin-top:1.6em;color:#ffd479}
+.sub{color:#9fb0c3;margin:.2em 0 1.2em}
+.card{background:#161b22;border:1px solid #2b333f;border-radius:12px;padding:18px;margin:14px 0}
+label{display:block;margin:.7em 0 .25em;color:#c8d3e0;font-size:.95rem}
+input,select{width:100%;box-sizing:border-box;background:#0e1116;color:#e6e9ee;border:1px solid #39424f;border-radius:8px;padding:9px;font-size:1rem}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.row{grid-template-columns:1fr}}
+button{background:#f0a832;color:#14100a;border:0;border-radius:8px;padding:11px 18px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:14px}
+button.ghost{background:#232a35;color:#e6e9ee}
+pre{background:#0a0d11;border:1px solid #2b333f;border-radius:10px;padding:14px;white-space:pre-wrap;word-break:break-word;font-size:.92rem}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border:1px solid #2b333f;padding:6px 8px;text-align:left}
+th{background:#1b212b}
+.small{color:#9fb0c3;font-size:.88rem}
+a{color:#7cc4ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Ontario Sanitary Drainage Sizing Calculator</h1>
+<p class="sub">Fixture units → branch, stack and building drain sizes, straight from OBC Part 7 Tables 7.4.9.3 and 7.4.10.6.</p>
+<div class="card">
+<p class="small" style="margin-top:0">Enter fixture counts (fixture units from OBC Table 7.4.9.3 shown beside each):</p>
+<div class="row"><div><label>Water closet, flush tank (FU each: 4)</label></div><div><input type="number" min="0" value="0" data-fu="4" class="fx"></div></div><div class="row"><div><label>Water closet, direct flush valve (FU each: 6)</label></div><div><input type="number" min="0" value="0" data-fu="6" class="fx"></div></div><div class="row"><div><label>Urinal (pedestal, siphon jet or blowout) (FU each: 4)</label></div><div><input type="number" min="0" value="0" data-fu="4" class="fx"></div></div><div class="row"><div><label>Lavatory (wash basin) (FU each: 1)</label></div><div><input type="number" min="0" value="0" data-fu="1" class="fx"></div></div><div class="row"><div><label>Bathtub (with or without shower) (FU each: 1.5)</label></div><div><input type="number" min="0" value="0" data-fu="1.5" class="fx"></div></div><div class="row"><div><label>Shower, per head (FU each: 1.5)</label></div><div><input type="number" min="0" value="0" data-fu="1.5" class="fx"></div></div><div class="row"><div><label>Sink (domestic / kitchen) (FU each: 1.5)</label></div><div><input type="number" min="0" value="0" data-fu="1.5" class="fx"></div></div><div class="row"><div><label>Laundry tray / sink (FU each: 1.5)</label></div><div><input type="number" min="0" value="0" data-fu="1.5" class="fx"></div></div><div class="row"><div><label>Bathroom group (WC + lavatory + tub or shower) (FU each: 6)</label></div><div><input type="number" min="0" value="0" data-fu="6" class="fx"></div></div>
+<div class="row"><div><label>Largest FU drained from any one storey (stack check, 0 = skip)</label><input id="onestorey" type="number" value="0" min="0"></div>
+<div><label>Building drain slope</label><select id="slope"><option value="0">1:400</option><option value="1">1:200</option><option value="2">1:133</option><option value="3">1:100</option><option value="4">1:50</option><option value="5">1:25</option></select></div></div>
+<button onclick="go()">Size the drainage pipes</button>
+</div>
+<h2>Result</h2>
+<pre id="out">Your pipe sizes will appear here.</pre>
+<p class="small">Ontario Building Code Part 7 sizes sanitary drainage by hydraulic load in fixture units:
+count the fixtures (Table 7.4.9.3), then read the smallest pipe whose table capacity covers the load —
+branches in Table 7.4.10.6.-B, stacks in 7.4.10.6.-A (with a per-storey cap), and building drains in
+7.4.10.6.-C by slope. A building drain or sewer to a public sewer is never smaller than NPS 4.</p>
+<p class="small">Free tool by <b>Dust 2 Engineering Inc.</b>, Mississauga, Ontario — building permit
+drawings for restaurants and small commercial projects across the GTA, stamped by an Ontario P.Eng.
+Flat rate $3,500–$5,000. Questions or a project to discuss: open an issue in this repository.</p>
+</div>
+<script>
+
+const STACK = {"1.25": [2, 2], "1.5": [8, 2], "2": [24, 6], "3": [102, 18], "4": [540, 100], "5": [1400, 250], "6": [2900, 500], "8": [7600, 830], "10": [15000, 2700], "12": [26000, 4680], "15": [50000, 9000]};
+const BRANCH = {"1.25": 2, "1.5": 3, "2": 6, "3": 27, "4": 180, "5": 390, "6": 700, "8": 1600, "10": 2500, "12": 3900};
+const DRAIN = {"3": [null, null, null, null, 27, 36], "4": [null, null, null, 180, 240, 300], "5": [null, null, 380, 390, 480, 670], "6": [null, null, 600, 700, 840, 1300], "8": [null, 1400, 1500, 1600, 2250, 3370], "10": [null, 2500, 2700, 3000, 4500, 6500], "12": [2240, 3900, 4500, 5400, 8300, 13000], "15": [4800, 7000, 9300, 10400, 16300, 22500]};
+function smallest(table, load){ for (const s in table){ if (table[s] >= load) return [s, table[s]]; } return [null, null]; }
+function go(){
+  let fu = 0;
+  document.querySelectorAll('.fx').forEach(function(el){ fu += (parseFloat(el.value) || 0) * parseFloat(el.dataset.fu); });
+  const oneStorey = parseFloat(document.getElementById('onestorey').value) || 0;
+  const slopeIdx = parseInt(document.getElementById('slope').value);
+  let out = 'Total hydraulic load: ' + fu + ' fixture units\n';
+  const b = smallest(BRANCH, fu);
+  out += b[0] ? ('Branch (Table 7.4.10.6.-B): minimum NPS ' + b[0] + ' (capacity ' + b[1] + ' FU)\n') : 'Branch: exceeds the NPS 12 table value\n';
+  let pick = null;
+  for (const s in STACK){ const t = STACK[s]; if (t[0] >= fu && (!oneStorey || t[1] >= oneStorey)){ pick = [s, t[0], t[1]]; break; } }
+  out += pick ? ('Stack (Table 7.4.10.6.-A): minimum NPS ' + pick[0] + ' (capacity ' + pick[1] + ' FU total, ' + pick[2] + ' FU from one storey)\n') : 'Stack: exceeds the NPS 15 table value\n';
+  let dpick = null;
+  for (const s in DRAIN){ const cap = DRAIN[s][slopeIdx]; if (cap !== null && cap >= fu && parseFloat(s) >= 4){ dpick = [s, cap]; break; } }
+  const slopeNames = ['1 in 400','1 in 200','1 in 133','1 in 100','1 in 50','1 in 25'];
+  out += dpick ? ('Building drain at slope ' + slopeNames[slopeIdx] + ' (Table 7.4.10.6.-C): minimum NPS ' + dpick[0] + ' (capacity ' + dpick[1] + ' FU). Building drains to a public sewer are never smaller than NPS 4.') : ('Building drain at slope ' + slopeNames[slopeIdx] + ': exceeds the table - increase the slope or go beyond NPS 15.');
+  document.getElementById('out').textContent = out;
+}
+
+</script>
+</body>
+</html>
